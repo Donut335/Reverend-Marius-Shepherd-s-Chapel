@@ -1,0 +1,92 @@
+/* ===== Shepherd's Chapel - Retro 90s Stylesheet ===== */
+body {
+  background-color: #1a0d33;
+  color: #ffff99;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+a { color: #00ffff; }
+a:visited { color: #ff99ff; }
+a:hover { color: #ffff00; background-color: #660066; }
+.wrap {
+  width: 800px;
+  max-width: 96%;
+  margin: 0 auto;
+  background-color: #2b1a4d;
+  border: 6px ridge #ffcc00;
+  text-align: left;
+}
+.banner {
+  background-color: #000000;
+  text-align: center;
+  padding: 8px 0;
+  border-bottom: 4px double #ffcc00;
+}
+marquee { font-family: "Comic Sans MS", cursive, sans-serif; }
+.navbar {
+  background-color: #4d0099;
+  border-top: 3px outset #cc99ff;
+  border-bottom: 3px outset #cc99ff;
+  text-align: center;
+  padding: 6px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+.navbar a { color: #ffff00; text-decoration: none; padding: 2px 10px; }
+.navbar a:hover { color: #ffffff; background-color: #cc0000; }
+.content { padding: 16px 24px; }
+h1 {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  color: #ffcc00;
+  text-align: center;
+  text-shadow: 2px 2px #cc0000;
+}
+h2 {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  color: #66ff66;
+  border-bottom: 2px dashed #ffcc00;
+  text-shadow: 1px 1px #003300;
+}
+h3 { color: #ff99ff; font-family: Arial, sans-serif; }
+.goldbox {
+  border: 4px ridge #ffcc00;
+  background-color: #33265c;
+  padding: 12px;
+  margin: 14px 0;
+}
+.center { text-align: center; }
+.btn {
+  display: inline-block;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-weight: bold;
+  color: #000000;
+  background-color: #ffcc00;
+  border: 4px outset #ffee88;
+  padding: 8px 18px;
+  text-decoration: none;
+  text-align: center;
+}
+.btn:hover { background-color: #ffff66; border-style: inset; color: #660000; }
+.footer {
+  background-color: #000000;
+  border-top: 4px double #ffcc00;
+  text-align: center;
+  padding: 12px;
+  font-size: 13px;
+  color: #cccccc;
+  font-family: Arial, sans-serif;
+}
+.flame { color: #ff6600; font-weight: bold; }
+hr.fancy { border: 0; border-top: 3px groove #ffcc00; margin: 16px 0; }
+.chapelimg { border: 5px ridge #ffcc00; max-width: 100%; height: auto; }
+blockquote {
+  font-style: italic;
+  color: #ccffff;
+  border-left: 4px solid #00ffff;
+  margin: 10px 20px;
+  padding-left: 14px;
+}
+img { max-width: 100%; height: auto; }

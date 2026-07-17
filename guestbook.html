@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sign the guestbook of Reverend Marius' Shepherd's Chapel.">
+<title>* ~ Guestbook - Shepherd's Chapel ~ *</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="banner">
+    <marquee scrollamount="6" behavior="alternate" direction="left">
+      <font color="#ffcc00" size="4">&#9997; SIGN OUR GUESTBOOK &mdash; LET US KNOW YOU STOPPED BY! &#9997;</font>
+    </marquee>
+  </div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td align="center" bgcolor="#000000" style="padding:14px;">
+        <h1 style="margin:6px;">&#128221; The Chapel Guestbook &#128221;</h1>
+        <font color="#66ff66" face="Comic Sans MS">~ Leave A Blessing For The Congregation ~</font>
+      </td>
+    </tr>
+  </table>
+
+  <div class="navbar">
+    [ <a href="index.html">HOME</a> ]
+    [ <a href="about.html">THE REVEREND</a> ]
+    [ <a href="expect.html">WHAT TO EXPECT</a> ]
+    [ <a href="guestbook.html">GUESTBOOK</a> ]
+  </div>
+
+  <div class="content">
+
+    <div class="goldbox">
+      <h3 class="center">&#9997; Sign The Guestbook &#9997;</h3>
+      <form onsubmit="return signBook(event)">
+        <p>
+          <label><b>Your Name:</b></label><br>
+          <input type="text" id="gb-name" size="30" maxlength="40">
+        </p>
+        <p>
+          <label><b>Where are you visiting from?</b></label><br>
+          <input type="text" id="gb-city" size="30" maxlength="40">
+        </p>
+        <p>
+          <label><b>Your Message:</b></label><br>
+          <textarea id="gb-msg" rows="4" cols="40" maxlength="300"></textarea>
+        </p>
+        <p class="center">
+          <input type="submit" class="btn" value="&#128231; Sign It! &#128231;">
+        </p>
+      </form>
+      <p class="center"><font size="2" color="#cc99ff"><i>
+        (This is a demo guestbook &mdash; entries are saved right here in your browser!)
+      </i></font></p>
+    </div>
+
+    <hr class="fancy">
+
+    <h2 class="center">&#128278; Recent Blessings &#128278;</h2>
+    <div id="entries"></div>
+
+    <div class="center">
+      <a href="index.html" class="btn">&#8962; Back To Home &#8962;</a>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <p>
+      &#10014; Reverend Marius' Shepherd's Chapel &#10014;<br>
+      "Honoring the sacred traditions of the past for the strength of the future."
+    </p>
+    <p>
+      <font face="Courier New" size="2">
+        Best viewed in Netscape Navigator 4.0 at 800x600 resolution<br>
+        &copy; 1999 Shepherd's Chapel Web Ministry &mdash; All Blessings Reserved
+      </font>
+    </p>
+    <p>
+      <a href="mailto:reverend@shepherdschapel.example">&#9993; Email the Reverend</a> |
+      <a href="index.html">&#8962; Home</a>
+    </p>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+  var SAMPLE = [
+    { name: "Martha B.", city: "Cedar Falls", msg: "Such a warm and welcoming congregation. The Reverend's sermon touched my heart!" },
+    { name: "The Johnson Family", city: "Riverbend", msg: "Our little ones love the chapel. Come as you are is truly meant here. God bless!" },
+    { name: "Elder Thomas", city: "Down the road", msg: "Timeless truth in a steadfast sanctuary. This is a rare and blessed place." }
+  ];
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem("chapel_guestbook") || "[]"); }
+    catch (e) { return []; }
+  }
+
+  function save(list) {
+    try { localStorage.setItem("chapel_guestbook", JSON.stringify(list)); }
+    catch (e) { /* browser storage unavailable */ }
+  }
+
+  function render() {
+    var user = load();
+    var all = user.concat(SAMPLE);
+    var html = "";
+    for (var i = 0; i < all.length; i++) {
+      var e = all[i];
+      html += '<div class="goldbox">'
+        + '<b><font color="#ffcc00">&#10022; ' + esc(e.name || "A Friend") + '</font></b>'
+        + (e.city ? ' <font size="2" color="#cc99ff">from ' + esc(e.city) + '</font>' : '')
+        + '<br><span style="color:#ccffff;">&ldquo;' + esc(e.msg || "") + '&rdquo;</span>'
+        + '</div>';
+    }
+    document.getElementById("entries").innerHTML = html;
+  }
+
+  function signBook(ev) {
+    ev.preventDefault();
+    var name = document.getElementById("gb-name").value.trim();
+    var city = document.getElementById("gb-city").value.trim();
+    var msg = document.getElementById("gb-msg").value.trim();
+    if (!msg) { alert("Please leave a message before signing!"); return false; }
+    var list = load();
+    list.unshift({ name: name, city: city, msg: msg });
+    save(list);
+    document.getElementById("gb-name").value = "";
+    document.getElementById("gb-city").value = "";
+    document.getElementById("gb-msg").value = "";
+    render();
+    alert("Thank you for signing our guestbook! God bless you.");
+    return false;
+  }
+
+  render();
+</script>
+
+</body>
+</html>
