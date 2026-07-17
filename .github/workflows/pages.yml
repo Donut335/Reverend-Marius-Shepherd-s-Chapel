@@ -3,6 +3,7 @@ name: Deploy Chapel Website to GitHub Pages
 on:
   push:
     branches:
+      - main
       - claude/shepherds-chapel-website-phzhb9
   workflow_dispatch:
 
