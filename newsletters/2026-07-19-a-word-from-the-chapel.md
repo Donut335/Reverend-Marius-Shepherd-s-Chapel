@@ -1,4 +1,4 @@
-publish: 2026-07-18 06:00
+publish: 2026-07-19 09:00
 
 # A Word From The Chapel
 
