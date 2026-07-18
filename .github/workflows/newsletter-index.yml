@@ -118,7 +118,10 @@ jobs:
                   body = raw[tm.end():]
 
               issues.append({
-                  'date': date,
+                  # The date shown to readers is when the issue actually went
+                  # out, which is the publish time if one was given. Otherwise
+                  # it falls back to the date in the filename.
+                  'date': when.strftime('%Y-%m-%d'),
                   'slug': slug,
                   'title': title,
                   'html': to_html(body),
