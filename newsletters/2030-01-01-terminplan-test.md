@@ -1,4 +1,4 @@
-publish: 2030-01-01 09:00
+publish: 2026-07-18 06:00
 
 # Test der Zeitsteuerung
 
