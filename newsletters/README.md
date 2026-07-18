@@ -72,26 +72,37 @@ Datei hineinziehen → „Commit changes". Am besten JPG, und vorher auf etwa
 
     Liebe Freunde,
 
-    ![Unsere Kapelle im Sommer](images/kapelle-sommer.jpg)
+    ![Unsere Kapelle im Sommer](../images/kapelle-sommer.jpg)
 
     so schön war es am vergangenen Sonntag.
 
 Der Aufbau ist immer:
 
-    ![Bildunterschrift](images/dateiname.jpg)
+    ![Bildunterschrift](../images/dateiname.jpg)
 
 - Das `!` am Anfang ist wichtig — ohne wird ein Link daraus statt eines Bildes.
 - Der Text in den eckigen Klammern erscheint als **Bildunterschrift** unter dem
   Bild.
-- In den runden Klammern steht der Pfad, also fast immer `images/` und der
-  Dateiname. Auf **Groß- und Kleinschreibung achten**, `Foto.JPG` und `foto.jpg`
-  sind verschieden.
+- In den runden Klammern steht der Pfad: **`../images/`** und der Dateiname.
+  Auf **Groß- und Kleinschreibung achten**, `Foto.JPG` und `foto.jpg` sind
+  verschieden.
+
+### Warum `../images/` und nicht `images/`?
+
+Beides funktioniert auf der Webseite. Aber mit den zwei Punkten davor zeigt
+GitHub das Bild auch in der **Vorschau** an, wenn du die Datei bearbeitest
+(Reiter „Preview"). Ohne die Punkte siehst du dort nur ein kaputtes Bildsymbol,
+obwohl auf der Webseite alles stimmt — GitHub sucht das Bild dann nämlich im
+Ordner `newsletters/`, wo es nicht liegt.
+
+Kurz: **`../images/` benutzen**, dann kannst du vorab kontrollieren, ob alles
+richtig sitzt.
 
 ### Bild ohne Unterschrift
 
 Eckige Klammern einfach leer lassen:
 
-    ![](images/kapelle-sommer.jpg)
+    ![](../images/kapelle-sommer.jpg)
 
 ---
 
@@ -100,17 +111,17 @@ Eckige Klammern einfach leer lassen:
 **Nebeneinander:** mehrere Bildzeilen **direkt untereinander**, ohne Leerzeile
 dazwischen:
 
-    ![Der Chor](images/chor.jpg)
-    ![Das Buffet](images/buffet.jpg)
+    ![Der Chor](../images/chor.jpg)
+    ![Das Buffet](../images/buffet.jpg)
 
 Die beiden stehen dann nebeneinander. Auf dem Handy rutschen sie automatisch
 untereinander.
 
 **Untereinander:** eine Leerzeile zwischen die Bildzeilen setzen:
 
-    ![Der Chor](images/chor.jpg)
+    ![Der Chor](../images/chor.jpg)
 
-    ![Das Buffet](images/buffet.jpg)
+    ![Das Buffet](../images/buffet.jpg)
 
 Merksatz: **keine Leerzeile = nebeneinander, Leerzeile = untereinander.**
 
@@ -193,6 +204,10 @@ Endung ist nicht `.md`), oder der `publish:`-Termin liegt noch in der Zukunft.
 
 **Bild wird nicht angezeigt?** Prüfe, ob die Datei wirklich im Ordner `images`
 liegt und ob der Name im Text **exakt** gleich geschrieben ist, inklusive
-Groß- und Kleinschreibung und Endung (`.jpg` oder `.jpeg`).
+Groß- und Kleinschreibung und Endung (`.jpg`, `.jpeg` oder `.png`).
+
+**Bild fehlt nur in der GitHub-Vorschau?** Dann steht wahrscheinlich `images/`
+statt `../images/` im Text. Auf der Webseite erscheint es trotzdem richtig —
+aber mit `../` davor siehst du es auch in der Vorschau.
 
 **Statt des Bildes steht Text da?** Dann fehlt das `!` am Zeilenanfang.
