@@ -88,6 +88,19 @@ h3 { color: #ff99ff; font-family: Arial, sans-serif; }
 .letter ul { margin: 6px 0 6px 4px; }
 .letter li { margin: 3px 0; }
 .letter b { color: #ffcc00; }
+.newsimgs { text-align: center; margin: 14px 0; }
+.newsimgs figure { margin: 8px auto; }
+.newsimgs img { max-width: 100%; height: auto; }
+/* Several pictures in one block sit side by side and wrap on small screens. */
+.newsimgs.row { display: flex; flex-wrap: wrap; justify-content: center; }
+.newsimgs.row figure { flex: 1 1 220px; max-width: 48%; margin: 6px; }
+.newsimgs figcaption {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #cc99ff;
+  margin-top: 5px;
+}
+
 details.pastletter {
   border: 3px ridge #cc99ff;
   background-color: #2b1a4d;

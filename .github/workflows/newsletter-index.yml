@@ -69,14 +69,46 @@ jobs:
           now = datetime.now(TZ)
           print("Timezone: %s (now %s)" % (tz_name, now.strftime("%Y-%m-%d %H:%M %Z")))
 
+          IMG_RE = re.compile(r'!\[([^\]]*)\]\(([^)\s]+)\)')
+
+          def safe_src(u):
+              """Only repo-relative paths and plain https URLs are allowed,
+              so a stray javascript: or data: URL cannot reach the page."""
+              u = (u or '').strip()
+              if re.match(r'^https://[^\s"\'<>]+$', u):
+                  return u
+              if re.match(r'^[A-Za-z0-9._/-]+$', u) and '..' not in u:
+                  return u
+              return None
+
+          def img_tag(alt_escaped, src):
+              return '<img class="chapelimg" src="%s" alt="%s">' % (
+                  html.escape(src), alt_escaped)
+
           def inline(text):
               """Escape first, then allow a small, fixed set of markup."""
               t = html.escape(text)
+
+              def _img(m):
+                  src = safe_src(m.group(2))
+                  if not src:
+                      print('::warning::Skipping image with unsupported path: %r'
+                            % m.group(2))
+                      return ''
+                  return img_tag(m.group(1), src)
+
+              t = IMG_RE.sub(_img, t)   # images before links: ![x](y) vs [x](y)
               t = re.sub(r'\[([^\]]+)\]\((https?://[^\s)]+)\)',
                          r'<a href="\2">\1</a>', t)
               t = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', t)
               t = re.sub(r'(?<!\*)\*([^*]+)\*(?!\*)', r'<i>\1</i>', t)
               return t
+
+          def figure(alt, src):
+              cap = ''
+              if alt.strip():
+                  cap = '<figcaption>%s</figcaption>' % html.escape(alt.strip())
+              return '<figure>%s%s</figure>' % (img_tag(html.escape(alt), src), cap)
 
           def to_html(body):
               out = []
@@ -84,10 +116,27 @@ jobs:
                   block = block.strip()
                   if not block:
                       continue
-                  lines = block.split('\n')
-                  if all(l.strip().startswith('- ') for l in lines):
-                      items = ''.join(
-                          '<li>%s</li>' % inline(l.strip()[2:]) for l in lines)
+                  lines = [l.strip() for l in block.split('\n') if l.strip()]
+
+                  # A block containing nothing but image lines becomes a
+                  # picture. Several in one block sit side by side.
+                  if lines and all(IMG_RE.fullmatch(l) for l in lines):
+                      figs = []
+                      for l in lines:
+                          m = IMG_RE.fullmatch(l)
+                          src = safe_src(m.group(2))
+                          if not src:
+                              print('::warning::Skipping image with unsupported '
+                                    'path: %r' % m.group(2))
+                              continue
+                          figs.append(figure(m.group(1), src))
+                      if figs:
+                          out.append('<div class="newsimgs%s">%s</div>' % (
+                              ' row' if len(figs) > 1 else '', ''.join(figs)))
+                      continue
+
+                  if all(l.startswith('- ') for l in lines):
+                      items = ''.join('<li>%s</li>' % inline(l[2:]) for l in lines)
                       out.append('<ul>%s</ul>' % items)
                   elif block.startswith('## '):
                       out.append('<h3>%s</h3>' % inline(block[3:].strip()))
