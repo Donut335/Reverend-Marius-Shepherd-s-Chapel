@@ -1,5 +1,10 @@
 [
   {
+    "name": "Test Pilgrim",
+    "city": "Testville",
+    "msg": "This is a test entry to verify the approval flow works."
+  },
+  {
     "name": "Markus",
     "city": "Ladenburg",
     "msg": "I have found the true meaning of the holy Spirit through Reverend Marius Schmitz. Blessed be the children of the Lord."
