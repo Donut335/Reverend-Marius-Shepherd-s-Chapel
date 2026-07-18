@@ -1,5 +1,11 @@
 [
   {
+    "name": "test",
+    "city": "test",
+    "rating": 3,
+    "msg": "test"
+  },
+  {
     "name": "Markus",
     "city": "Ladenburg",
     "rating": 5,
