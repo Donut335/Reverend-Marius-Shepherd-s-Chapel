@@ -12,6 +12,7 @@ on:
     branches: [main]
     paths:
       - 'newsletters/**.md'
+      - 'newsletters/timezone.txt'
       - '.github/workflows/newsletter-index.yml'
   schedule:
     # Every 15 minutes. GitHub does not run these to the minute, so a due
@@ -40,8 +41,33 @@ jobs:
           from datetime import datetime
           from zoneinfo import ZoneInfo
 
-          TZ = ZoneInfo("Europe/Berlin")
+          # Which clock the publish: times are meant in. Edit
+          # newsletters/timezone.txt to change it, e.g. Europe/Berlin.
+          FALLBACK = "America/Detroit"
+          tz_name = FALLBACK
+          try:
+              with open("newsletters/timezone.txt", encoding="utf-8") as f:
+                  for line in f:
+                      line = line.split("#")[0].strip()
+                      if line:
+                          tz_name = line
+                          break
+          except FileNotFoundError:
+              print("No newsletters/timezone.txt, using %s" % FALLBACK)
+
+          try:
+              TZ = ZoneInfo(tz_name)
+          except Exception:
+              # A typo must not block every future issue from going out, so
+              # fall back rather than fail - but say so loudly.
+              print("::warning::Unknown timezone %r in newsletters/timezone.txt "
+                    "- falling back to %s. Publish times may be off."
+                    % (tz_name, FALLBACK))
+              tz_name = FALLBACK
+              TZ = ZoneInfo(FALLBACK)
+
           now = datetime.now(TZ)
+          print("Timezone: %s (now %s)" % (tz_name, now.strftime("%Y-%m-%d %H:%M %Z")))
 
           def inline(text):
               """Escape first, then allow a small, fixed set of markup."""

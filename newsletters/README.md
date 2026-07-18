@@ -41,12 +41,32 @@ Schreibe eine `publish:`-Zeile an den Anfang der Datei:
     Der Text ...
 
 Die Ausgabe erscheint dann erst am 1. August um 9:00 Uhr auf der Webseite.
-Uhrzeit ist immer **deutsche Zeit** (Europe/Berlin), im Format `HH:MM` in
-24-Stunden-Schreibweise. Die Uhrzeit kann man weglassen (`publish: 2026-08-01`),
-dann erscheint sie um Mitternacht.
+Format `HH:MM` in 24-Stunden-Schreibweise. Die Uhrzeit kann man weglassen
+(`publish: 2026-08-01`), dann erscheint sie um Mitternacht.
 
-Ohne `publish:`-Zeile gilt das Datum aus dem Dateinamen, also sofort sobald
-dieses Datum erreicht ist.
+Welche Uhrzeit gemeint ist, steht in **`newsletters/timezone.txt`**. Dort steht
+im Moment:
+
+    America/Detroit
+
+Das ist die Zeit in Michigan (Eastern Time), Sommer- und Winterzeit werden
+automatisch berücksichtigt. Du gibst die Zeiten also so an, wie die Uhr bei dir
+an der Wand steht — nichts umrechnen.
+
+Zum Umstellen einfach die Datei bearbeiten und eine andere Zone eintragen,
+zum Beispiel:
+
+    Europe/Berlin        deutsche Zeit
+    America/New_York     Ostküste USA
+    America/Chicago      Central Time
+    America/Los_Angeles  Westküste USA
+
+Nur ein Name pro Datei. Bei einem Tippfehler nimmt der Workflow wieder
+America/Detroit und schreibt eine Warnung ins Protokoll — dann stimmen die
+Uhrzeiten aber möglicherweise nicht, also lieber kurz unter Actions nachsehen.
+
+Ohne `publish:`-Zeile gilt das Datum aus dem Dateinamen (Mitternacht in der
+eingestellten Zeitzone).
 
 Die `publish:`-Zeile wird beim Anzeigen automatisch entfernt, sie steht also
 nicht im Newsletter.
