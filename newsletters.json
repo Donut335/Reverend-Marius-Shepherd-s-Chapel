@@ -1,5 +1,11 @@
 [
   {
+    "date": "2030-01-01",
+    "slug": "terminplan-test",
+    "title": "Test der Zeitsteuerung",
+    "html": "<p>Diese Ausgabe darf erst 2030 erscheinen. Wird sie vorher auf der Webseite<br>angezeigt, stimmt etwas nicht.</p>"
+  },
+  {
     "date": "2026-07-18",
     "slug": "welcome",
     "title": "A Word From The Chapel",
