@@ -1,17 +1,5 @@
 [
   {
-    "name": "test",
-    "city": "test",
-    "rating": 3,
-    "msg": "test"
-  },
-  {
-    "name": "Markus",
-    "city": "Ladenburg",
-    "rating": 5,
-    "msg": "I have found the true meaning of the holy Spirit through Reverend Marius Schmitz. Blessed be the children of the Lord."
-  },
-  {
     "name": "Martha B.",
     "city": "Cedar Falls",
     "rating": 5,
