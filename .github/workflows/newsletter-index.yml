@@ -77,7 +77,9 @@ jobs:
               u = (u or '').strip()
               if re.match(r'^https://[^\s"\'<>]+$', u):
                   return u
-              if re.match(r'^[A-Za-z0-9._/-]+$', u) and '..' not in u:
+              # '~' is allowed because image generators produce names like
+              # Gemini_Generated_Image_....~2.jpg
+              if re.match(r'^[A-Za-z0-9._/~-]+$', u) and '..' not in u:
                   return u
               return None
 
