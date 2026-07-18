@@ -77,6 +77,13 @@ jobs:
               u = (u or '').strip()
               if re.match(r'^https://[^\s"\'<>]+$', u):
                   return u
+              # A single leading '../' is accepted and stripped: it makes the
+              # path resolve in GitHub's markdown preview, which looks relative
+              # to newsletters/, while the site serves images from the root.
+              m = re.match(r'^\.\./(.+)$', u)
+              if m:
+                  u = m.group(1)
+
               # '~' is allowed because image generators produce names like
               # Gemini_Generated_Image_....~2.jpg
               if re.match(r'^[A-Za-z0-9._/~-]+$', u) and '..' not in u:
