@@ -51,6 +51,11 @@
           <input type="text" id="gb-city" size="30" maxlength="40">
         </p>
         <p>
+          <label><b>How was your visit?</b></label><br>
+          <span id="gb-rating" class="rating"></span>
+          <font size="2" color="#cc99ff"><i id="gb-rating-label">(click a cross to rate)</i></font>
+        </p>
+        <p>
           <label><b>Your Message:</b></label><br>
           <textarea id="gb-msg" rows="4" cols="40" maxlength="300"></textarea>
         </p>
@@ -114,6 +119,59 @@
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
+  // ===== Cross rating selector =====
+  // Fills left-to-right on hover and locks in on click, like review stars.
+  var RATING = 0;
+  var MAX_CROSSES = 5;
+
+  function paintRating(upTo) {
+    var boxes = document.getElementById("gb-rating").getElementsByTagName("span");
+    for (var i = 0; i < boxes.length; i++) {
+      boxes[i].className = "cross" + (i < upTo ? " on" : "");
+    }
+  }
+
+  function setRatingLabel(n) {
+    document.getElementById("gb-rating-label").innerHTML =
+      n ? "(" + n + " of " + MAX_CROSSES + ")" : "(click a cross to rate)";
+  }
+
+  function buildRating() {
+    var box = document.getElementById("gb-rating");
+    box.innerHTML = "";
+    for (var i = 1; i <= MAX_CROSSES; i++) {
+      var c = document.createElement("span");
+      c.className = "cross";
+      c.innerHTML = "&#10014;";
+      c.setAttribute("role", "button");
+      c.setAttribute("tabindex", "0");
+      c.setAttribute("title", i + " of " + MAX_CROSSES);
+      (function (value, el) {
+        el.onmouseover = function () { paintRating(value); };
+        el.onclick = function () { RATING = value; paintRating(value); setRatingLabel(value); };
+        el.onkeydown = function (ev) {
+          if (ev.keyCode === 13 || ev.keyCode === 32) { ev.preventDefault(); el.onclick(); }
+        };
+      })(i, c);
+      box.appendChild(c);
+    }
+    // Leaving the row snaps back to whatever is actually selected.
+    box.onmouseout = function () { paintRating(RATING); };
+    paintRating(0);
+  }
+
+  // TEMPORARY: posted entries always show all 5 crosses, regardless of what the
+  // visitor picked. The real rating is still captured and stored on the entry
+  // (see "rating" in guestbook.json) — swap the line below for e.rating to use it.
+  function crossesFor(e) {
+    var shown = MAX_CROSSES;   // <-- change to: (e.rating || 0)
+    var html = '<span class="rating static">';
+    for (var i = 0; i < MAX_CROSSES; i++) {
+      html += '<span class="cross' + (i < shown ? " on" : "") + '">&#10014;</span>';
+    }
+    return html + '</span>';
+  }
+
   function render() {
     var html = "";
     for (var i = 0; i < ENTRIES.length; i++) {
@@ -121,6 +179,7 @@
       html += '<div class="goldbox">'
         + '<b><font color="#ffcc00">&#10022; ' + esc(e.name || "A Friend") + '</font></b>'
         + (e.city ? ' <font size="2" color="#cc99ff">from ' + esc(e.city) + '</font>' : '')
+        + '<br>' + crossesFor(e)
         + '<br><span style="color:#ccffff;">&ldquo;' + esc(e.msg || "") + '&rdquo;</span>'
         + '</div>';
     }
@@ -139,6 +198,7 @@
     var issueTitle = "[Guestbook] " + (name || "A Friend");
     var issueBody = "NAME: " + (name || "A Friend") + "\n"
       + "CITY: " + (city || "") + "\n"
+      + "RATING: " + RATING + "\n"
       + "MESSAGE: " + msg + "\n";
     var approveUrl = APPROVE_BASE
       + "?title=" + encodeURIComponent(issueTitle)
@@ -152,6 +212,7 @@
         body: JSON.stringify({
           Name: name || "A Friend",
           "Visiting from": city || "(not given)",
+          Rating: RATING ? RATING + " of " + MAX_CROSSES + " crosses" : "(not rated)",
           Message: msg,
           "APPROVE - click to publish this entry": approveUrl,
           _subject: "New Shepherd's Chapel Guestbook Entry",
@@ -164,6 +225,9 @@
     document.getElementById("gb-name").value = "";
     document.getElementById("gb-city").value = "";
     document.getElementById("gb-msg").value = "";
+    RATING = 0;
+    paintRating(0);
+    setRatingLabel(0);
     alert("🙏 Blessings, and thank you for sharing your thoughts with our church family. "
       + "Your entry has been gracefully forwarded to Reverend Marius for his review and personal "
       + "blessing before it is posted. 🙏");
@@ -172,6 +236,7 @@
 
   // Load the approved entries, then draw them.
   function load() {
+    buildRating();
     if (!window.fetch) { render(); return; }
     fetch("guestbook.json?v=" + Date.now())
       .then(function (r) { return r.ok ? r.json() : []; })

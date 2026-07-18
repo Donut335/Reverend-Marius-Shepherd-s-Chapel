@@ -80,6 +80,25 @@ h3 { color: #ff99ff; font-family: Arial, sans-serif; }
   font-family: Arial, sans-serif;
 }
 .flame { color: #ff6600; font-weight: bold; }
+
+/* ===== Cross rating (like review stars, but blessed) ===== */
+.rating { font-size: 30px; line-height: 1; user-select: none; }
+.rating .cross {
+  color: #6b5aa0;               /* hollow: dim, recedes into the box */
+  cursor: pointer;
+  padding: 0 3px;
+  background: none;
+  border: none;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 30px;
+}
+.rating .cross.on {
+  color: #ffcc00;               /* filled: chapel gold */
+  text-shadow: 1px 1px #cc0000;
+}
+.rating .cross:focus { outline: 2px dotted #00ffff; }
+/* Entry ratings are display-only, so no pointer or hover behaviour. */
+.rating.static .cross { cursor: default; padding: 0 1px; font-size: 20px; }
 hr.fancy { border: 0; border-top: 3px groove #ffcc00; margin: 16px 0; }
 .chapelimg { border: 5px ridge #ffcc00; max-width: 100%; height: auto; }
 blockquote {
