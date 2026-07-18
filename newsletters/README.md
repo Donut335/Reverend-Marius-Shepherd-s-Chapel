@@ -30,11 +30,40 @@ Sobald die Datei auf GitHub liegt, baut ein Workflow die Übersicht automatisch
 neu und die Ausgabe erscheint auf der Newsletter-Seite. Das dauert etwa eine
 Minute.
 
-## Ausgabe im Voraus schreiben
+## Ausgabe im Voraus schreiben und zu einem Termin veröffentlichen
 
-Einfach die Datei mit einem Datum in der Zukunft anlegen — sie erscheint dann
-trotzdem sofort auf der Seite. Wenn du sie erst später zeigen willst, schreibe
-sie vor und lade sie erst am Tag des Versands hoch.
+Schreibe eine `publish:`-Zeile an den Anfang der Datei:
+
+    publish: 2026-08-01 09:00
+
+    # Titel der Ausgabe
+
+    Der Text ...
+
+Die Ausgabe erscheint dann erst am 1. August um 9:00 Uhr auf der Webseite.
+Uhrzeit ist immer **deutsche Zeit** (Europe/Berlin), im Format `HH:MM` in
+24-Stunden-Schreibweise. Die Uhrzeit kann man weglassen (`publish: 2026-08-01`),
+dann erscheint sie um Mitternacht.
+
+Ohne `publish:`-Zeile gilt das Datum aus dem Dateinamen, also sofort sobald
+dieses Datum erreicht ist.
+
+Die `publish:`-Zeile wird beim Anzeigen automatisch entfernt, sie steht also
+nicht im Newsletter.
+
+**Zwei Dinge dazu:**
+
+- GitHub führt die Zeitsteuerung **nicht auf die Minute genau** aus. Rechne
+  damit, dass die Ausgabe etwa 15–30 Minuten nach der angegebenen Zeit
+  erscheint. Für „Sonntag früh" reicht das, für „Punkt 12:00" nicht.
+- Das Repo ist öffentlich. Eine vorbereitete Ausgabe kann also jeder im Ordner
+  `newsletters/` lesen, **bevor** sie auf der Webseite erscheint. Die
+  Zeitsteuerung regelt die Anzeige, nicht die Geheimhaltung. Wenn eine Ausgabe
+  wirklich vorher niemand sehen darf, lade sie erst am Tag selbst hoch.
+
+Prüfen kann man das jederzeit: im Repo unter **Actions → Build Newsletter
+Index** zeigt der letzte Lauf an, welche Ausgaben veröffentlicht sind und
+welche noch warten (`waiting: ... (due ...)`).
 
 ## Per E-Mail verschicken
 

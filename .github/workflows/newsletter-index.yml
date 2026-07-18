@@ -1,7 +1,11 @@
 name: Build Newsletter Index
 
 # Turns the markdown files in newsletters/ into newsletters.json, which the
-# newsletter page reads. Runs whenever an issue is added or changed.
+# newsletter page reads. An issue only appears once its publish time has
+# passed, so issues can be written well in advance.
+#
+# Runs on every change to an issue, and on a schedule so that issues waiting
+# for their publish time actually go out.
 
 on:
   push:
@@ -9,10 +13,15 @@ on:
     paths:
       - 'newsletters/**.md'
       - '.github/workflows/newsletter-index.yml'
+  schedule:
+    # Every 15 minutes. GitHub does not run these to the minute, so a due
+    # issue typically appears within about 15-30 minutes of its publish time.
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: newsletter-index
@@ -28,6 +37,11 @@ jobs:
         run: |
           python3 - <<'PY'
           import glob, html, json, os, re
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          TZ = ZoneInfo("Europe/Berlin")
+          now = datetime.now(TZ)
 
           def inline(text):
               """Escape first, then allow a small, fixed set of markup."""
@@ -39,13 +53,12 @@ jobs:
               return t
 
           def to_html(body):
-              out, list_open = [], False
+              out = []
               for block in re.split(r'\n\s*\n', body.strip()):
                   block = block.strip()
                   if not block:
                       continue
                   lines = block.split('\n')
-                  # A block of "- " lines becomes a list.
                   if all(l.strip().startswith('- ') for l in lines):
                       items = ''.join(
                           '<li>%s</li>' % inline(l.strip()[2:]) for l in lines)
@@ -58,8 +71,8 @@ jobs:
                       out.append('<p>%s</p>' % inline(block).replace('\n', '<br>'))
               return ''.join(out)
 
-          issues = []
-          for path in glob.glob('newsletters/*.md'):
+          issues, waiting = [], []
+          for path in sorted(glob.glob('newsletters/*.md')):
               base = os.path.basename(path)
               if base.lower() == 'readme.md':
                   continue
@@ -72,8 +85,34 @@ jobs:
               with open(path, encoding='utf-8') as f:
                   raw = f.read()
 
+              # Optional "publish: YYYY-MM-DD HH:MM" line, removed before
+              # rendering so it never shows up in the letter itself.
+              pub = re.search(
+                  r'^[ \t]*publish:[ \t]*(\d{4})-(\d{2})-(\d{2})'
+                  r'(?:[ T]+(\d{1,2}):(\d{2}))?[ \t]*$',
+                  raw, re.MULTILINE | re.IGNORECASE)
+              if pub:
+                  y, mo, d = int(pub.group(1)), int(pub.group(2)), int(pub.group(3))
+                  hh = int(pub.group(4) or 0)
+                  mi = int(pub.group(5) or 0)
+                  raw = raw[:pub.start()] + raw[pub.end():]
+              else:
+                  # No publish line: use the date from the filename, midnight.
+                  y, mo, d = (int(x) for x in date.split('-'))
+                  hh = mi = 0
+
+              try:
+                  when = datetime(y, mo, d, hh, mi, tzinfo=TZ)
+              except ValueError:
+                  print('Skipping %s: invalid publish date' % base)
+                  continue
+
+              if when > now:
+                  waiting.append('%s (due %s)' % (base, when.strftime('%Y-%m-%d %H:%M %Z')))
+                  continue
+
               title, body = slug.replace('-', ' ').title(), raw
-              tm = re.match(r'\s*#\s+(.+?)\n', raw)
+              tm = re.search(r'^\s*#\s+(.+?)\s*$', raw, re.MULTILINE)
               if tm:
                   title = tm.group(1).strip()
                   body = raw[tm.end():]
@@ -83,25 +122,40 @@ jobs:
                   'slug': slug,
                   'title': title,
                   'html': to_html(body),
+                  '_sort': when.isoformat(),
               })
 
-          issues.sort(key=lambda i: (i['date'], i['slug']), reverse=True)
+          issues.sort(key=lambda i: i['_sort'], reverse=True)
+          for i in issues:
+              del i['_sort']
 
           with open('newsletters.json', 'w', encoding='utf-8') as f:
               json.dump(issues, f, indent=2, ensure_ascii=False)
               f.write('\n')
 
-          print('Wrote %d issue(s)' % len(issues))
+          print('Published %d issue(s) as of %s' % (
+              len(issues), now.strftime('%Y-%m-%d %H:%M %Z')))
+          for w in waiting:
+              print('  waiting: %s' % w)
           PY
 
-      - name: Commit if changed
+      - name: Commit and redeploy if changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ -n "$(git status --porcelain newsletters.json)" ]; then
-            git config user.name  "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add newsletters.json
-            git commit -m "Rebuild newsletter index"
-            git push
-          else
+          if [ -z "$(git status --porcelain newsletters.json)" ]; then
             echo "newsletters.json already up to date"
+            exit 0
           fi
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add newsletters.json
+          git commit -m "Rebuild newsletter index"
+          git push
+
+          # A commit made with GITHUB_TOKEN does not trigger other workflows,
+          # so the Pages deploy has to be started explicitly or the site would
+          # keep serving the previous index.
+          gh workflow run pages.yml --ref main
+          echo "Triggered Pages deploy"
