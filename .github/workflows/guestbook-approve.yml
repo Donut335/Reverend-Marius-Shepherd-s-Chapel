@@ -1,0 +1,88 @@
+name: Guestbook Approval
+
+# When the Reverend clicks "Approve" in the notification email, GitHub opens a
+# pre-filled issue. Submitting it runs this workflow, which adds the entry to
+# guestbook.json and opens a pull request. Merging that PR publishes the entry.
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  approve:
+    # Only the repository owner can publish. Anyone else opening an issue that
+    # looks like a guestbook entry is ignored.
+    if: >-
+      startsWith(github.event.issue.title, '[Guestbook]') &&
+      github.event.issue.user.login == github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add entry to guestbook.json
+        id: add
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+
+          body = os.environ.get("ISSUE_BODY") or ""
+
+          def field(label, text):
+              m = re.search(rf"^{label}:[ \t]*(.*)$", text, re.MULTILINE)
+              return m.group(1).strip() if m else ""
+
+          name = field("NAME", body) or "A Friend"
+          city = field("CITY", body)
+
+          # MESSAGE is last and may span several lines.
+          m = re.search(r"^MESSAGE:[ \t]*(.*)\Z", body, re.MULTILINE | re.DOTALL)
+          msg = m.group(1).strip() if m else ""
+
+          if not msg:
+              raise SystemExit("No MESSAGE found in issue body")
+
+          # Trim to the same limits the form enforces.
+          name, city, msg = name[:40], city[:40], msg[:300]
+
+          with open("guestbook.json", encoding="utf-8") as f:
+              entries = json.load(f)
+
+          entries.insert(0, {"name": name, "city": city, "msg": msg})
+
+          with open("guestbook.json", "w", encoding="utf-8") as f:
+              json.dump(entries, f, indent=2, ensure_ascii=False)
+              f.write("\n")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"name={name}\n")
+          PY
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v7
+        id: pr
+        with:
+          branch: guestbook/entry-${{ github.event.issue.number }}
+          commit-message: "Guestbook: add entry from ${{ steps.add.outputs.name }}"
+          title: "Guestbook: publish entry from ${{ steps.add.outputs.name }}"
+          body: |
+            Approved guestbook entry from issue #${{ github.event.issue.number }}.
+
+            **Merge this pull request to publish the entry on the website.**
+          delete-branch: true
+
+      - name: Link the pull request and close the issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ steps.pr.outputs.pull-request-url }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} \
+            --body "Entry prepared: $PR_URL — merge it to publish the entry on the website."
+          gh issue close ${{ github.event.issue.number }}

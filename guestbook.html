@@ -100,12 +100,14 @@
   // address below; the Reverend clicks it once to activate delivery.
   var FORM_ENDPOINT = "https://formsubmit.co/ajax/Rev.MariusSchmitz@gmail.com";
 
-  var SAMPLE = [
-    { name: "Markus", city: "Ladenburg", msg: "I have found the true meaning of the holy Spirit through Reverend Marius Schmitz. Blessed be the children of the Lord." },
-    { name: "Martha B.", city: "Cedar Falls", msg: "Such a warm and welcoming congregation. The Reverend's sermon touched my heart!" },
-    { name: "The Johnson Family", city: "Riverbend", msg: "Our little ones love the chapel. Come as you are is truly meant here. God bless!" },
-    { name: "Elder Thomas", city: "Down the road", msg: "Timeless truth in a steadfast sanctuary. This is a rare and blessed place." }
-  ];
+  // Approved entries live in guestbook.json and are loaded at page load.
+  // Nothing is posted here until the Reverend approves it (see APPROVE_BASE).
+  var ENTRIES = [];
+
+  // Clicking "Approve" in the notification email opens a pre-filled GitHub
+  // issue; a workflow in this repository turns that into a pull request
+  // adding the entry to guestbook.json. No password or key lives on this page.
+  var APPROVE_BASE = "https://github.com/Donut335/Reverend-Marius-Shepherd-s-Chapel/issues/new";
 
   function esc(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -114,8 +116,8 @@
 
   function render() {
     var html = "";
-    for (var i = 0; i < SAMPLE.length; i++) {
-      var e = SAMPLE[i];
+    for (var i = 0; i < ENTRIES.length; i++) {
+      var e = ENTRIES[i];
       html += '<div class="goldbox">'
         + '<b><font color="#ffcc00">&#10022; ' + esc(e.name || "A Friend") + '</font></b>'
         + (e.city ? ' <font size="2" color="#cc99ff">from ' + esc(e.city) + '</font>' : '')
@@ -132,6 +134,16 @@
     var msg = document.getElementById("gb-msg").value.trim();
     if (!msg) { alert("Please leave a message before signing!"); return false; }
 
+    // Build the one-click approval link that travels with the email.
+    // The workflow reads these three fields back out of the issue body.
+    var issueTitle = "[Guestbook] " + (name || "A Friend");
+    var issueBody = "NAME: " + (name || "A Friend") + "\n"
+      + "CITY: " + (city || "") + "\n"
+      + "MESSAGE: " + msg + "\n";
+    var approveUrl = APPROVE_BASE
+      + "?title=" + encodeURIComponent(issueTitle)
+      + "&body=" + encodeURIComponent(issueBody);
+
     // Email the entry to Reverend Marius for review before it is posted
     if (window.fetch) {
       fetch(FORM_ENDPOINT, {
@@ -141,6 +153,7 @@
           Name: name || "A Friend",
           "Visiting from": city || "(not given)",
           Message: msg,
+          "APPROVE - click to publish this entry": approveUrl,
           _subject: "New Shepherd's Chapel Guestbook Entry",
           _template: "table",
           _captcha: "false"
@@ -157,7 +170,16 @@
     return false;
   }
 
-  render();
+  // Load the approved entries, then draw them.
+  function load() {
+    if (!window.fetch) { render(); return; }
+    fetch("guestbook.json?v=" + Date.now())
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (data) { ENTRIES = data || []; render(); })
+      .catch(function () { render(); });
+  }
+
+  load();
 </script>
 
 </body>
