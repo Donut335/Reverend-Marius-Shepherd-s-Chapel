@@ -2,21 +2,25 @@
   {
     "name": "Markus",
     "city": "Ladenburg",
+    "rating": 5,
     "msg": "I have found the true meaning of the holy Spirit through Reverend Marius Schmitz. Blessed be the children of the Lord."
   },
   {
     "name": "Martha B.",
     "city": "Cedar Falls",
+    "rating": 5,
     "msg": "Such a warm and welcoming congregation. The Reverend's sermon touched my heart!"
   },
   {
     "name": "The Johnson Family",
     "city": "Riverbend",
+    "rating": 5,
     "msg": "Our little ones love the chapel. Come as you are is truly meant here. God bless!"
   },
   {
     "name": "Elder Thomas",
     "city": "Down the road",
+    "rating": 5,
     "msg": "Timeless truth in a steadfast sanctuary. This is a rare and blessed place."
   }
 ]

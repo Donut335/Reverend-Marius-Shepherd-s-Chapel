@@ -160,6 +160,15 @@
     paintRating(0);
   }
 
+  // The notification email shows the crosses the visitor actually picked:
+  // filled ones, then hollow ones, plus the number in brackets.
+  function ratingForEmail() {
+    if (!RATING) return "(not rated)";
+    var s = "";
+    for (var i = 0; i < MAX_CROSSES; i++) s += (i < RATING ? "✞" : "·");
+    return s + "  (" + RATING + " of " + MAX_CROSSES + ")";
+  }
+
   // TEMPORARY: posted entries always show all 5 crosses, regardless of what the
   // visitor picked. The real rating is still captured and stored on the entry
   // (see "rating" in guestbook.json) — swap the line below for e.rating to use it.
@@ -212,7 +221,7 @@
         body: JSON.stringify({
           Name: name || "A Friend",
           "Visiting from": city || "(not given)",
-          Rating: RATING ? RATING + " of " + MAX_CROSSES + " crosses" : "(not rated)",
+          Rating: ratingForEmail(),
           Message: msg,
           "APPROVE - click to publish this entry": approveUrl,
           _subject: "New Shepherd's Chapel Guestbook Entry",
