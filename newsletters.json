@@ -1,12 +1,6 @@
 [
   {
     "date": "2026-07-18",
-    "slug": "bilder-test",
-    "title": "Bilder-Test",
-    "html": "<p>Ein Bild mit Unterschrift:</p><div class=\"newsimgs\"><figure><img class=\"chapelimg\" src=\"images/chapel-v2.jpg\" alt=\"Unsere Kapelle im Sommer\"><figcaption>Unsere Kapelle im Sommer</figcaption></figure></div><p>Eins ohne Unterschrift:</p><div class=\"newsimgs\"><figure><img class=\"chapelimg\" src=\"images/reverend-v3.jpg\" alt=\"\"></figure></div><p>Zwei nebeneinander:</p><div class=\"newsimgs row\"><figure><img class=\"chapelimg\" src=\"images/artwork-river.jpg\" alt=\"Der Fluss\"><figcaption>Der Fluss</figcaption></figure><figure><img class=\"chapelimg\" src=\"images/chapel-v2.jpg\" alt=\"Die Kapelle\"><figcaption>Die Kapelle</figcaption></figure></div><p>Ein gefaehrlicher Pfad muss verschwinden:</p><p>Und ein Pfad nach oben:</p>"
-  },
-  {
-    "date": "2026-07-18",
     "slug": "welcome",
     "title": "A Word From The Chapel",
     "html": "<p>Beloved friends of the Shepherd&#x27;s Chapel,</p><p>Welcome to the very first issue of our weekly letter. Each week we shall share<br>a word of encouragement, news of the congregation, and the times of our<br>gatherings.</p><h3>This Week At The Chapel</h3><ul><li>Sunday service at half past nine in the morning</li><li>Wednesday evening prayer at seven</li><li>The choir practises on Thursday, and new voices are always welcome</li></ul><h3>A Thought To Carry</h3><p>The lamp in the chapel window is lit every evening, as it has been for many<br>years. It is a small thing, but it says to anyone passing in the dark that<br>someone is expecting them.</p><p>Come as you are. There is a seat for you.</p><p>Yours in fellowship,<br><b>Reverend Marius</b></p>"
