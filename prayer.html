@@ -64,9 +64,13 @@
         </p>
         <p>
           <label><b>Who is this prayer for?</b></label><br>
-          <label><input type="radio" name="pr-for" value="Myself" checked> For myself</label>
+          <label><input type="radio" name="pr-for" value="Myself" checked onclick="togglePrayerFor()"> For myself</label>
           &nbsp;&nbsp;
-          <label><input type="radio" name="pr-for" value="Someone else"> For someone else</label>
+          <label><input type="radio" name="pr-for" value="Someone else" onclick="togglePrayerFor()"> For someone else</label>
+        </p>
+        <p id="pr-forname-row" style="display:none;">
+          <label><b>Who are we praying for? (their name)</b></label><br>
+          <input type="text" id="pr-forname" size="30" maxlength="60">
         </p>
         <p>
           <label><b>What do you need prayer for?</b></label><br>
@@ -112,6 +116,17 @@
   // Delivery uses FormSubmit (same as the guestbook and newsletter signup).
   var PRAYER_ENDPOINT = "https://formsubmit.co/ajax/Rev.MariusSchmitz@gmail.com";
 
+  // Show the "their name" field only when praying for someone else.
+  function togglePrayerFor() {
+    var forWhom = "Myself";
+    var radios = document.getElementsByName("pr-for");
+    for (var i = 0; i < radios.length; i++) {
+      if (radios[i].checked) { forWhom = radios[i].value; break; }
+    }
+    document.getElementById("pr-forname-row").style.display =
+      (forWhom === "Someone else") ? "block" : "none";
+  }
+
   function sendPrayer(ev) {
     ev.preventDefault();
     var name = document.getElementById("pr-name").value.trim();
@@ -122,9 +137,19 @@
     for (var i = 0; i < radios.length; i++) {
       if (radios[i].checked) { forWhom = radios[i].value; break; }
     }
+    var forName = document.getElementById("pr-forname").value.trim();
 
     if (!name) { alert("Please enter your name."); return false; }
+    if (forWhom === "Someone else" && !forName) {
+      alert("Please enter the name of the person you would like us to pray for.");
+      return false;
+    }
     if (!msg) { alert("Please share what you need prayer for."); return false; }
+
+    // When it is for someone else, note their name alongside the choice.
+    var forField = (forWhom === "Someone else")
+      ? "Someone else — " + forName
+      : "Myself";
 
     if (window.fetch) {
       fetch(PRAYER_ENDPOINT, {
@@ -132,7 +157,7 @@
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
           Name: name,
-          "This prayer is for": forWhom,
+          "This prayer is for": forField,
           "Prayer request": msg,
           _subject: "New Prayer Request - Shepherd's Chapel",
           _template: "table",
@@ -143,7 +168,9 @@
 
     document.getElementById("pr-name").value = "";
     document.getElementById("pr-msg").value = "";
+    document.getElementById("pr-forname").value = "";
     if (radios.length) { radios[0].checked = true; }
+    togglePrayerFor();
 
     alert("🙏 Your prayer request has been safely received. In our unchanging sanctuary, you are no "
       + "longer carrying this alone. Our community will now take up your request, asking for truth, "
