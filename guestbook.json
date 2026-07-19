@@ -1,5 +1,17 @@
 [
   {
+    "name": "Arthur&Eleano Vance",
+    "city": "Quincy",
+    "rating": 5,
+    "msg": "A firm handshake and a good word. That’s what we get every week here. Grateful for your ministry, Reverend Marius"
+  },
+  {
+    "name": "The Brook Family",
+    "city": "Marble Lake",
+    "rating": 5,
+    "msg": "Reverend Marius, your sermon today was exactly what we needed to hear. It’s comforting to have a minister who truly understands the value of a grounded life."
+  },
+  {
     "name": "Brother Zephaniah",
     "city": "The Valley of Eternal Vigilance",
     "rating": 5,
