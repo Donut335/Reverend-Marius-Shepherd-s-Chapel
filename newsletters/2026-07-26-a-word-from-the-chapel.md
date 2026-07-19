@@ -8,9 +8,13 @@ As many of you know, our dear Johnson family—Elias, Sarah, and their sweet chi
 
 But praise be to God, our church community came together to lift that burden. Thanks to the overwhelming generosity of this congregation, Elias and Sarah were able to purchase a reliable, used 2008 John Deere tractor. We step up for one another because sharing is caring, and caring is an act of God given through us. The Johnsons' farm is safe, and their hearts are full of gratitude for their church family.
 
+![Unsere Kapelle im Sommer](../images/1784419706645.png)
+
 ## Breaking Bread Together
 
 There is something incredibly sacred about the simple act of making bread. Earlier this week, a lovely group from our church family gathered here at the Chapel to do just that. Whenever I knead the dough, my heart naturally turns to Jesus and the Last Supper. He showed us the beauty of breaking bread with whomever is at the table—not by dwelling on the sorrows that lay ahead, but by living fully in the moment and offering profound forgiveness.
+
+![Unsere Kapelle im Sommer](../images/1784499323003.png)
 
 If you would like to experience this beautiful fellowship, please join us the next time we host a community bread baking. You will leave our little Chapel with the joy of time spent with lovely people, a deep sense of faith, bliss in your heart, and a warm loaf in your hands.
 
@@ -18,7 +22,7 @@ If you would like to experience this beautiful fellowship, please join us the ne
 
 As I wrote earlier about the grace of being still, I am reminded of a beautiful afternoon a few of us shared just the other day. We took a boat out onto the lake, intentionally stepping away from the hustle and demands of our day-to-day lives. There is something profoundly restorative about simply sitting together on the water, sharing a gentle chat, and letting the world slow down.
 
-*[Photo of Reverend Marius, Arthur, and Elinor Vance on the lake — to be added]*
+![Unsere Kapelle im Sommer](../images/1784485460650.png)
 
 As you can see in this lovely picture of Arthur and Elinor Vance and myself, we were truly blessed to have God's glorious light shining down upon us, warming both our faces and our spirits. It was a perfect reminder that He meets us in our times of rest just as much as in our times of work.
 
