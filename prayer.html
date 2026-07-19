@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Submit a prayer request to Reverend Marius' Shepherd's Chapel.">
+<title>* ~ Prayer Requests - Reverend Marius' Shepherd's Chapel ~ *</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="banner">
+    <marquee scrollamount="5" behavior="scroll" direction="left">
+      <font color="#ffcc00" size="4">&#128591; SHARE YOUR BURDENS &mdash; YOU DO NOT HAVE TO WALK ALONE &mdash; WE WILL PRAY WITH YOU &#128591;</font>
+    </marquee>
+  </div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td align="center" bgcolor="#000000" style="padding:14px;">
+        <h1 style="margin:6px;">&#128591; Prayer Requests &#128591;</h1>
+        <font color="#66ff66" face="Comic Sans MS">~ Our Prayer Sanctuary ~</font>
+      </td>
+    </tr>
+  </table>
+
+  <div class="navbar">
+    [ <a href="index.html">HOME</a> ]
+    [ <a href="about.html">THE REVEREND</a> ]
+    [ <a href="expect.html">WHAT TO EXPECT</a> ]
+    [ <a href="gallery.html">ARTWORKS</a> ]
+    [ <a href="newsletter.html">WEEKLY LETTER</a> ]
+    [ <a href="prayer.html">PRAYER REQUESTS</a> ]
+    [ <a href="guestbook.html">GUESTBOOK</a> ]
+  </div>
+
+  <div class="content">
+
+    <div class="goldbox">
+      <p>
+        Welcome to our prayer sanctuary. Our mission is to &ldquo;Gather in Reverence, Ground in Truth,
+        Equip for Service,&rdquo; and true service begins by lifting up one another in times of need.
+        When life&rsquo;s burdens feel too heavy to carry alone, or when you are simply seeking guidance,
+        you do not have to walk in isolation. Just as a sudden, unexpected calling can change a life in
+        a matter of hours, a quiet moment of shared prayer can bring profound and unexpected strength.
+        Please share your burdens, hopes, and needs below, so that our devoted congregation may join
+        together to hold you in faithful prayer.
+      </p>
+    </div>
+
+    <hr class="fancy">
+
+    <div class="goldbox">
+      <h3 class="center">&#128591; Submit A Prayer Request &#128591;</h3>
+      <form onsubmit="return sendPrayer(event)">
+        <p>
+          <label><b>Your Name:</b></label><br>
+          <input type="text" id="pr-name" size="30" maxlength="60">
+        </p>
+        <p>
+          <label><b>Who is this prayer for?</b></label><br>
+          <label><input type="radio" name="pr-for" value="Myself" checked> For myself</label>
+          &nbsp;&nbsp;
+          <label><input type="radio" name="pr-for" value="Someone else"> For someone else</label>
+        </p>
+        <p>
+          <label><b>What do you need prayer for?</b></label><br>
+          <textarea id="pr-msg" rows="5" cols="40" maxlength="1000"></textarea>
+        </p>
+        <p class="center">
+          <input type="submit" class="btn" value="&#128591; Send Prayer Request &#128591;">
+        </p>
+      </form>
+      <p class="center"><font size="2" color="#cc99ff"><i>
+        Your request is sent privately to Reverend Marius and is never posted publicly.
+      </i></font></p>
+    </div>
+
+    <div class="center">
+      <a href="index.html" class="btn">&#8962; Back To Home &#8962;</a>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <p>
+      &#10014; Reverend Marius' Shepherd's Chapel &#10014;<br>
+      "Honoring the sacred traditions of the past for the strength of the future."
+    </p>
+    <p>
+      <font face="Courier New" size="2">
+        Best viewed in Netscape Navigator 4.0 at 800x600 resolution<br>
+        &copy; 1999 Shepherd's Chapel Web Ministry &mdash; All Blessings Reserved
+      </font>
+    </p>
+    <p>
+      <a href="mailto:Rev.MariusSchmitz@gmail.com">&#9993; Email the Reverend</a> |
+      <a href="index.html">&#8962; Home</a>
+    </p>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+  // Prayer requests are emailed privately to Reverend Marius and go nowhere
+  // else. They are never stored in this repository or posted on the site.
+  // Delivery uses FormSubmit (same as the guestbook and newsletter signup).
+  var PRAYER_ENDPOINT = "https://formsubmit.co/ajax/Rev.MariusSchmitz@gmail.com";
+
+  function sendPrayer(ev) {
+    ev.preventDefault();
+    var name = document.getElementById("pr-name").value.trim();
+    var msg = document.getElementById("pr-msg").value.trim();
+
+    var forWhom = "Myself";
+    var radios = document.getElementsByName("pr-for");
+    for (var i = 0; i < radios.length; i++) {
+      if (radios[i].checked) { forWhom = radios[i].value; break; }
+    }
+
+    if (!name) { alert("Please enter your name."); return false; }
+    if (!msg) { alert("Please share what you need prayer for."); return false; }
+
+    if (window.fetch) {
+      fetch(PRAYER_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Name: name,
+          "This prayer is for": forWhom,
+          "Prayer request": msg,
+          _subject: "New Prayer Request - Shepherd's Chapel",
+          _template: "table",
+          _captcha: "false"
+        })
+      }).catch(function () { /* offline or blocked */ });
+    }
+
+    document.getElementById("pr-name").value = "";
+    document.getElementById("pr-msg").value = "";
+    if (radios.length) { radios[0].checked = true; }
+
+    alert("🙏 Your prayer request has been safely received. In our unchanging sanctuary, you are no "
+      + "longer carrying this alone. Our community will now take up your request, asking for truth, "
+      + "comfort, and peace to surround your situation. May you feel the quiet strength of our "
+      + "congregation standing with you in reverence today. 🙏");
+    return false;
+  }
+</script>
+
+</body>
+</html>
